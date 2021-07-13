@@ -1,7 +1,7 @@
 {
-  "app_id": 9000,
-  "title": "My Awesome E-Com Plus App",
-  "slug": "my-awesome-ecom-plus-app",
+  "app_id": 131670,
+  "title": "Facebook Conversions API",
+  "slug": "facebook-conversions",
   "type": "external",
   "state": "active",
   "authentication": true,
@@ -17,8 +17,12 @@
     "brands": [],
     "categories": [],
     "customers": [],
-    "orders": [],
-    "carts": [],
+    "orders": [
+      "GET"
+    ],
+    "carts": [
+      "GET"
+    ],
     "orders/fulfillments": [],
     "orders/payments_history": [],
     "products/quantity": [],
@@ -26,6 +30,25 @@
     "products/price": [],
     "products/variations/price": []
   },
-  "auth_callback_uri": "https://us-central1-ecom-app-boilerplate.cloudfunctions.net/app/ecom/auth-callback",
+  "admin_settings": {
+    "pixel_id": {
+      "schema": {
+        "type": "string",
+        "maxLength": 100,
+        "title": "Pixel ID",
+        "description": "ID do pixel do Facebook"
+      },
+      "hide": true
+    },
+    "token": {
+      "schema": {
+        "type": "string",
+        "maxLength": 500,
+        "title": "App token"
+      },
+      "hide": true
+    }
+  },
+  "auth_callback_uri": "https://us-central1-ecom-fb-conversions.cloudfunctions.net/app/ecom/auth-callback",
   "version": "1.0.0"
 }
