@@ -136,29 +136,29 @@ const app = {
      * Ref.: https://developers.e-com.plus/docs/api/#/store/
      */
   },
-  
+
   admin_settings: {
     /**
      * JSON schema based fields to be configured by merchant and saved to app `data` / `hidden_data`, such as:
      */
-     
-     pixel_id: {
-       schema: {
-         type: 'string',
-         maxLength: 100,
-         title: 'Pixel ID',
-         description: 'ID do pixel do Facebook'
-       },
-       hide: true
-     },
-     token: {
-       schema: {
-         type: 'string',
-         maxLength: 500,
-         title: 'App token'
-       },
-       hide: true
-     },
+
+    pixel_id: {
+      schema: {
+        type: 'string',
+        maxLength: 100,
+        title: 'Pixel ID',
+        description: 'ID do pixel do Facebook'
+      },
+      hide: true
+    },
+    token: {
+      schema: {
+        type: 'string',
+        maxLength: 500,
+        title: 'App token'
+      },
+      hide: true
+    },
   }
 }
 
