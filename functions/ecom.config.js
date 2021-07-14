@@ -142,7 +142,7 @@ const app = {
      * JSON schema based fields to be configured by merchant and saved to app `data` / `hidden_data`, such as:
      */
 
-    pixel_id: {
+    fb_pixel_id: {
       schema: {
         type: 'string',
         maxLength: 100,
@@ -151,7 +151,7 @@ const app = {
       },
       hide: true
     },
-    token: {
+    fb_graph_token: {
       schema: {
         type: 'string',
         maxLength: 500,
