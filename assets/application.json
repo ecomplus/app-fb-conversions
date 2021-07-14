@@ -31,7 +31,7 @@
     "products/variations/price": []
   },
   "admin_settings": {
-    "pixel_id": {
+    "fb_pixel_id": {
       "schema": {
         "type": "string",
         "maxLength": 100,
@@ -40,7 +40,7 @@
       },
       "hide": true
     },
-    "token": {
+    "fb_graph_token": {
       "schema": {
         "type": "string",
         "maxLength": 500,
