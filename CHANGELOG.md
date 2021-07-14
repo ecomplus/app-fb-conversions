@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.0.0 (2021-07-14)
+
+
+### Features
+
+* **ecom-config:** setup app properties, admin settings, auth and procedures ([b4822c4](https://github.com/ecomplus/application-starter/commit/b4822c4eab1be0307ab6fc0c7e390dfa35f22f43))
+* **webhook:** properly handle order events and send fb graph api ([c544770](https://github.com/ecomplus/application-starter/commit/c5447702b6c6dfa9f8c4e8339d7b3a52a228c034))
+
 ## [1.0.0-starter.24](https://github.com/ecomplus/application-starter/compare/v1.0.0-starter.23...v1.0.0-starter.24) (2021-06-24)
 
 
