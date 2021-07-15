@@ -1,7 +1,7 @@
 {
   "app": {
-    "title": "",
-    "short_description": "",
+    "title": "Facebook Conversions API",
+    "short_description": "Envio de novos pedidos para o Facebook através da API de Conversões",
     "category": "tools"
   }
 }
