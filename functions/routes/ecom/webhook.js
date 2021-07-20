@@ -86,9 +86,12 @@ exports.post = ({ appSdk }, req, res) => {
               .setCurrency((order.currency_id && order.currency_id.toLowerCase()) || 'brl')
               .setValue(Math.round(order.amount.total * 100) / 100)
 
+            const eventMs = Math.min(new Date(order.created_at || trigger.datetime).getTime(), Date.now() - 3000)
+            console.log(`#${storeId} ${order._id} at ${eventMs}ms`)
+
             const serverEvent = (new ServerEvent())
               .setEventName('Purchase')
-              .setEventTime(Math.min(new Date(order.created_at || trigger.datetime).getTime(), Date.now() - 3000) / 1000)
+              .setEventTime(Math.round(eventMs / 1000))
               .setUserData(userData)
               .setCustomData(customData)
               .setActionSource('website')
