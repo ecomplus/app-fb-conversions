@@ -88,7 +88,7 @@ exports.post = ({ appSdk }, req, res) => {
 
             const serverEvent = (new ServerEvent())
               .setEventName('Purchase')
-              .setEventTime(Math.min(new Date(order.created_at || trigger.datetime).getTime(), Date.now() - 3000))
+              .setEventTime(Math.min(new Date(order.created_at || trigger.datetime).getTime(), Date.now() - 3000) / 1000)
               .setUserData(userData)
               .setCustomData(customData)
               .setActionSource('website')
