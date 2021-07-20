@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1](https://github.com/ecomplus/application-starter/compare/v1.0.0...v1.0.1) (2021-07-20)
+
+
+### Bug Fixes
+
+* **fb-event-time:** fb expects event time in secods (not ms) ([95f9681](https://github.com/ecomplus/application-starter/commit/95f968198fcbe729995934ae6b59526076d703d2))
+* **webhook:** get event time from `trigger.datetime` [[#2](https://github.com/ecomplus/application-starter/issues/2)] ([4d43db9](https://github.com/ecomplus/application-starter/commit/4d43db9a72e8c7d672bb7b58b2a2615d69ad2460))
+* **webhook:** limit event time to current timestamp - 3s ([b071af0](https://github.com/ecomplus/application-starter/commit/b071af01a31922132639ea69d378d1a32e6bf58f))
+
 ## 1.0.0 (2021-07-14)
 
 
