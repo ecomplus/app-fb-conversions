@@ -87,7 +87,7 @@ exports.post = ({ appSdk }, req, res) => {
               .setValue(Math.round(order.amount.total * 100) / 100)
 
             const eventMs = Math.min(new Date(order.created_at || trigger.datetime).getTime(), Date.now() - 3000)
-            console.log(`#${storeId} ${order._id} at ${eventMs}ms`)
+            console.log(`#${storeId} ${trigger.inserted_id} at ${eventMs}ms`)
 
             const serverEvent = (new ServerEvent())
               .setEventName('Purchase')
