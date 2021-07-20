@@ -88,7 +88,7 @@ exports.post = ({ appSdk }, req, res) => {
 
             const serverEvent = (new ServerEvent())
               .setEventName('Purchase')
-              .setEventTime(new Date(order.created_at || trigger.datetime).getTime())
+              .setEventTime(Math.min(new Date(order.created_at || trigger.datetime).getTime(), Date.now() - 3000))
               .setUserData(userData)
               .setCustomData(customData)
               .setActionSource('website')
@@ -108,7 +108,7 @@ exports.post = ({ appSdk }, req, res) => {
                 res.status(201).send(ECHO_SUCCESS)
               },
               err => {
-                console.error(`Facebook event request error: ${err.message}`, err)
+                console.error(`Facebook event request error: ${err.message}`, err, JSON.stringify(trigger))
                 res.sendStatus(202)
               }
             )
