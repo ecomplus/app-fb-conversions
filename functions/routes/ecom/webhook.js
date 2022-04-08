@@ -53,6 +53,7 @@ exports.post = ({ appSdk }, req, res) => {
 
             const userData = new UserData()
             const emails = buyer.emails || []
+            let actionSource = 'other'
             if (buyer.main_email) {
               emails.push(buyer.main_email)
             }
@@ -64,6 +65,7 @@ exports.post = ({ appSdk }, req, res) => {
             }
             if (order.browser_ip) {
               userData.setClientIpAddress(order.browser_ip)
+              actionSource = 'website'
             }
 
             const contents = []
@@ -95,7 +97,7 @@ exports.post = ({ appSdk }, req, res) => {
               .setEventTime(Math.round(eventMs / 1000))
               .setUserData(userData)
               .setCustomData(customData)
-              .setActionSource('website')
+              .setActionSource(actionSource)
             if (order.checkout_link) {
               serverEvent.setEventSourceUrl(order.checkout_link)
             } else if (order.domain) {
