@@ -1,3 +1,4 @@
+const { logger } = require('firebase-functions')
 const fbBizSdk = require('facebook-nodejs-business-sdk')
 
 // read configured E-Com Plus app data
@@ -107,6 +108,7 @@ exports.post = ({ appSdk }, req, res) => {
 
             eventRequest.execute().then(
               response => {
+                logger.info(response)
                 // all done
                 res.status(201).send(ECHO_SUCCESS)
               },
