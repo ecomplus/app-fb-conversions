@@ -20,13 +20,15 @@ exports.post = ({ appSdk }, req, res) => {
   const trigger = req.body
 
   if (trigger.resource === 'orders' && trigger.action === 'create') {
-    const order = trigger.body
+    const orderId = trigger.inserted_id
+    let order = trigger.body
     const buyer = order.buyers && order.buyers[0]
-    if (buyer) {
+    const clientIp = order.browser_ip
+    if (orderId && buyer && clientIp) {
       // get app configured options
       return getAppData({ appSdk, storeId })
 
-        .then(appData => {
+        .then(async appData => {
           if (
             Array.isArray(appData.ignore_triggers) &&
             appData.ignore_triggers.indexOf(trigger.resource) > -1
@@ -38,6 +40,23 @@ exports.post = ({ appSdk }, req, res) => {
           }
 
           /* DO YOUR CUSTOM STUFF HERE */
+
+          let clientUserAgent, eventID
+          try {
+            const { response } = await appSdk.apiRequest(storeId, `orders/${orderId}.json`)
+            order = response.data
+            if (order.metafields) {
+              const metafield = order.metafields.find(({ namespace, field }) => {
+                return namespace === 'fb' && field === 'pixel'
+              })
+              if (metafield) {
+                const value = JSON.parse(metafield.value)
+                eventID = value.eventID
+                clientUserAgent = value.userAgent
+              }
+            }
+          } catch (e) {
+          }
 
           // https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api#send
           const fbPixelId = appData.fb_pixel_id
@@ -53,7 +72,6 @@ exports.post = ({ appSdk }, req, res) => {
 
             const userData = new UserData()
             const emails = buyer.emails || []
-            let actionSource = 'other'
             if (buyer.main_email) {
               emails.push(buyer.main_email)
             }
@@ -63,9 +81,9 @@ exports.post = ({ appSdk }, req, res) => {
             if (buyer.phones && buyer.phones.length) {
               userData.setPhones(buyer.phones.map(({ number }) => String(number)))
             }
-            if (order.browser_ip) {
-              userData.setClientIpAddress(order.browser_ip)
-              actionSource = 'website'
+            userData.setClientIpAddress(clientIp)
+            if (clientUserAgent) {
+              userData.setClientUserAgent(clientUserAgent)
             }
 
             const contents = []
@@ -90,18 +108,21 @@ exports.post = ({ appSdk }, req, res) => {
               .setValue(Math.round(order.amount.total * 100) / 100)
 
             const eventMs = Math.min(new Date(order.created_at || trigger.datetime).getTime(), Date.now() - 3000)
-            console.log(`#${storeId} ${trigger.inserted_id} at ${eventMs}ms`)
+            console.log(`#${storeId} ${orderId} at ${eventMs}ms`)
 
             const serverEvent = (new ServerEvent())
               .setEventName('Purchase')
               .setEventTime(Math.round(eventMs / 1000))
               .setUserData(userData)
               .setCustomData(customData)
-              .setActionSource(actionSource)
+              .setActionSource('website')
             if (order.checkout_link) {
               serverEvent.setEventSourceUrl(order.checkout_link)
             } else if (order.domain) {
               serverEvent.setEventSourceUrl(`https://${order.domain}`)
+            }
+            if (eventID) {
+              serverEvent.setEventId(eventID)
             }
 
             const eventsData = [serverEvent]
