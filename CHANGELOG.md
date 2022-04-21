@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/ecomplus/application-starter/compare/v1.0.2...v1.1.0) (2022-04-21)
+
+
+### Features
+
+* **event-data:** read full order and set user agent and event id from metafield if any ([05b15c9](https://github.com/ecomplus/application-starter/commit/05b15c9222314423963b1e24d322477a0095f098))
+
+
+### Bug Fixes
+
+* **deps:** remove @google-cloud/firestore from direct deps [skip ci] ([0cd360e](https://github.com/ecomplus/application-starter/commit/0cd360ee784f3a835cb54b909d0ff3f5d923b9ad))
+* **deps:** update all non-major ([6e827db](https://github.com/ecomplus/application-starter/commit/6e827dbfac0df02b52c9004e4053761449b20241))
+* **deps:** update all non-major ([98266e5](https://github.com/ecomplus/application-starter/commit/98266e53b3da4eeb1c1807cd4c78a4049bf3e62b))
+* **deps:** update all non-major ([985b127](https://github.com/ecomplus/application-starter/commit/985b127bffc3f8770883187d4a6520468fde8bbc))
+* **deps:** update all non-major ([53282e0](https://github.com/ecomplus/application-starter/commit/53282e0f76aeff9400e5080a7f58088de3f50e77))
+* **deps:** update all non-major ([e868b5f](https://github.com/ecomplus/application-starter/commit/e868b5f9d01e4041f670fb21dda75298547e0d50))
+* **deps:** update all non-major ([ee95035](https://github.com/ecomplus/application-starter/commit/ee95035ffc388ba04a3bf30108643db50e6dc784))
+* **deps:** update all non-major ([399e368](https://github.com/ecomplus/application-starter/commit/399e3680f6082227a6141585ac49925243c743a9))
+* **deps:** update dependency @ecomplus/application-sdk to ^22.0.0-firestore.1.15.6 ([75da962](https://github.com/ecomplus/application-starter/commit/75da962e95277a90735ce1b5ca048a6dad69f899))
+* **deps:** update dependency dotenv to v16 ([#23](https://github.com/ecomplus/application-starter/issues/23)) [skip ci] ([8efc8b6](https://github.com/ecomplus/application-starter/commit/8efc8b64ba40decb24655906e5d04d3276dd6248))
+* **deps:** update dependency firebase-admin to v10 ([#12](https://github.com/ecomplus/application-starter/issues/12)) [skip ci] ([3fe1558](https://github.com/ecomplus/application-starter/commit/3fe155860a84c1c5c935fe2950b535e82cff30dc))
+* **deps:** update dependency firebase-tools to v10 ([#18](https://github.com/ecomplus/application-starter/issues/18)) [skip ci] ([05f2e21](https://github.com/ecomplus/application-starter/commit/05f2e21751bc268bca225d27a5b74e4ca3448ca5))
+* **deps:** update dependency uglify-js to ^3.14.3 ([48d9c7c](https://github.com/ecomplus/application-starter/commit/48d9c7c8f616f4c0d92fcd9cdb416ab3b618b28d))
+* **deps:** update dependency uglify-js to ^3.15.0 ([d9c2500](https://github.com/ecomplus/application-starter/commit/d9c2500dc61a667ff686ace7b51c978d7ea10c0c))
+
 ### [1.0.2](https://github.com/ecomplus/application-starter/compare/v1.0.1...v1.0.2) (2021-07-20)
 
 
