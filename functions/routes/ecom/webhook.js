@@ -42,21 +42,32 @@ exports.post = ({ appSdk }, req, res) => {
           /* DO YOUR CUSTOM STUFF HERE */
 
           let clientUserAgent, eventID
-          try {
-            const { response } = await appSdk.apiRequest(storeId, `orders/${orderId}.json`)
-            order = response.data
-            if (order.metafields) {
-              const metafield = order.metafields.find(({ namespace, field }) => {
-                return namespace === 'fb' && field === 'pixel'
-              })
-              if (metafield) {
-                const value = JSON.parse(metafield.value)
-                eventID = value.eventID
-                clientUserAgent = value.userAgent
+          const tryFetchOrder = async (isRetry = false) => {
+            try {
+              const { response } = await appSdk.apiRequest(storeId, `orders/${orderId}.json`)
+              order = response.data
+              if (order.metafields) {
+                const metafield = order.metafields.find(({ namespace, field }) => {
+                  return namespace === 'fb' && field === 'pixel'
+                })
+                if (metafield) {
+                  const value = JSON.parse(metafield.value)
+                  eventID = value.eventID
+                  clientUserAgent = value.userAgent
+                } else if (!isRetry) {
+                  return new Promise((resolve) => {
+                    setTimeout(() => {
+                      tryFetchOrder(true).then(resolve)
+                    }, 5000)
+                  })
+                }
               }
+            } catch (err) {
+              logger.error(err)
             }
-          } catch (e) {
+            return true
           }
+          await tryFetchOrder()
 
           // https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api#send
           const fbPixelId = appData.fb_pixel_id
