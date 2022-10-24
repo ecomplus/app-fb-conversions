@@ -108,7 +108,7 @@ exports.post = ({ appSdk }, req, res) => {
               .setValue(Math.round(order.amount.total * 100) / 100)
 
             const eventMs = Math.min(new Date(order.created_at || trigger.datetime).getTime(), Date.now() - 3000)
-            console.log(`#${storeId} ${orderId} at ${eventMs}ms`)
+            console.log(`#${storeId} ${orderId} (${eventID}) at ${eventMs}ms`)
 
             const serverEvent = (new ServerEvent())
               .setEventName('Purchase')
@@ -121,9 +121,7 @@ exports.post = ({ appSdk }, req, res) => {
             } else if (order.domain) {
               serverEvent.setEventSourceUrl(`https://${order.domain}`)
             }
-            if (eventID) {
-              serverEvent.setEventId(eventID)
-            }
+            serverEvent.setEventId(eventID || orderId)
 
             const eventsData = [serverEvent]
             const eventRequest = (new EventRequest(fbGraphToken, fbPixelId))
