@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/ecomplus/application-starter/compare/v1.1.0...v1.1.1) (2022-10-24)
+
+
+### Bug Fixes
+
+* debug event id and use order id if not set ([a31e444](https://github.com/ecomplus/application-starter/commit/a31e444db8929503e358d3deae90ba93d039b807))
+* **deps:** update all non-major ([411f4e0](https://github.com/ecomplus/application-starter/commit/411f4e0e6a42366557b8e25e9d56d05fb5dfba0b))
+* **deps:** update all non-major ([86a03b6](https://github.com/ecomplus/application-starter/commit/86a03b601eaaf16de6028aa292301587c3c80f83))
+* **deps:** update all non-major ([f3c3ff4](https://github.com/ecomplus/application-starter/commit/f3c3ff4b55dd89b375865b8e819b5c9de976d227))
+* **deps:** update all non-major ([8130206](https://github.com/ecomplus/application-starter/commit/8130206a648d220f4c7612294a3da1075a64bb0d))
+* **deps:** update all non-major dependencies ([b06f952](https://github.com/ecomplus/application-starter/commit/b06f9520e3038063a070df05fcfb2aaf14bfcc5c))
+
 ## [1.1.0](https://github.com/ecomplus/application-starter/compare/v1.0.2...v1.1.0) (2022-04-21)
 
 
