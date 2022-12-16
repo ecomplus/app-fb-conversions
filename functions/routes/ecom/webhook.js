@@ -50,7 +50,7 @@ exports.post = ({ appSdk }, req, res) => {
             try {
               const { response } = await appSdk.apiRequest(storeId, `orders/${orderId}.json`)
               order = response.data
-              if (order.metafields) {
+              if (order.metafields && order.status !== 'cancelled') {
                 const metafield = order.metafields.find(({ namespace, field }) => {
                   return namespace === 'fb' && field === 'pixel'
                 })
@@ -73,6 +73,10 @@ exports.post = ({ appSdk }, req, res) => {
             return true
           }
           await tryFetchOrder()
+          if (order.status === 'cancelled') {
+            res.sendStatus(204)
+            return
+          }
 
           // https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api#send
           const fbPixelId = appData.fb_pixel_id
