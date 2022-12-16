@@ -22,6 +22,10 @@ exports.post = ({ appSdk }, req, res) => {
   if (trigger.resource === 'orders' && trigger.action === 'create') {
     const orderId = trigger.inserted_id
     let order = trigger.body
+    if (order.status === 'cancelled') {
+      res.sendStatus(204)
+      return
+    }
     const buyer = order.buyers && order.buyers[0]
     const clientIp = order.browser_ip
     if (orderId && buyer && clientIp) {
