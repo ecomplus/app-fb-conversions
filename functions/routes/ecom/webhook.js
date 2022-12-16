@@ -55,10 +55,10 @@ exports.post = ({ appSdk }, req, res) => {
                   eventID = value.eventID
                   clientUserAgent = value.userAgent
                 } else if (!isRetry) {
-                  return new Promise((resolve) => {
+                  await new Promise((resolve) => {
                     setTimeout(() => {
                       tryFetchOrder(true).then(resolve)
-                    }, 5000)
+                    }, 15000)
                   })
                 }
               }
