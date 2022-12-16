@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/ecomplus/application-starter/compare/v1.1.2...v1.2.0) (2022-12-16)
+
+
+### Features
+
+* fill more fb user data fields ([70ff129](https://github.com/ecomplus/application-starter/commit/70ff129888cf1d482933e0af90b4ae5d0db28164))
+
+
+### Bug Fixes
+
+* bigger delay to retry fetch order when no metadata found ([a400b33](https://github.com/ecomplus/application-starter/commit/a400b33d10d88c14ff9f1016ffedef5c17b8af2b))
+* **deps:** update all non-major ([281aa03](https://github.com/ecomplus/application-starter/commit/281aa03af5e3713131040398d3ab01b6eddff610))
+
 ### [1.1.2](https://github.com/ecomplus/application-starter/compare/v1.1.1...v1.1.2) (2022-10-24)
 
 
