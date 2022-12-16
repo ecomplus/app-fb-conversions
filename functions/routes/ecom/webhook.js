@@ -57,8 +57,9 @@ exports.post = ({ appSdk }, req, res) => {
                 } else if (!isRetry) {
                   await new Promise((resolve) => {
                     setTimeout(() => {
+                      logger.log('Retry fetch order')
                       tryFetchOrder(true).then(resolve)
-                    }, 15000)
+                    }, 20000)
                   })
                 }
               }
