@@ -82,6 +82,7 @@ exports.post = ({ appSdk }, req, res) => {
             fbBizSdk.FacebookAdsApi.init(fbGraphToken)
 
             const userData = new UserData()
+            userData.setExternalId(buyer._id)
             const emails = buyer.emails || []
             if (buyer.main_email) {
               emails.push(buyer.main_email)
@@ -92,9 +93,26 @@ exports.post = ({ appSdk }, req, res) => {
             if (buyer.phones && buyer.phones.length) {
               userData.setPhones(buyer.phones.map(({ number }) => String(number)))
             }
+            if (buyer.name && buyer.name.given_name) {
+              userData.setFirstName(buyer.name.given_name)
+              if (buyer.name.family_name) {
+                userData.setLastName(buyer.name.family_name)
+              }
+            }
+            if (buyer.gender === 'f' || buyer.gender === 'm') {
+              userData.setGender(buyer.gender)
+            }
             userData.setClientIpAddress(clientIp)
             if (clientUserAgent) {
               userData.setClientUserAgent(clientUserAgent)
+            }
+            const shippingLine = order.shipping_lines && order.shipping_lines[0]
+            if (shippingLine && shippingLine.to.zip) {
+              userData.setZip(shippingLine.to.zip.replace(/\D/g, ''))
+              if (shippingLine.to.province_code) {
+                userData.setState(shippingLine.to.province_code.toLowerCase())
+                userData.setCountry((shippingLine.to.country_code || 'BR').toLowerCase())
+              }
             }
 
             const contents = []
