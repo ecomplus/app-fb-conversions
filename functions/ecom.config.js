@@ -75,7 +75,7 @@ const app = {
       // 'DELETE',        // Delete categories
     ],
     customers: [
-      // 'GET',           // List/read customers
+      'GET',           // List/read customers
       // 'POST',          // Create customers
       // 'PATCH',         // Edit customers
       // 'PUT',           // Overwrite customers
@@ -182,6 +182,11 @@ procedures.push({
     // Receive notifications when new order is created:
     {
       resource: 'orders',
+      action: 'create',
+    },
+
+    {
+      resource: 'carts',
       action: 'create',
     },
 
