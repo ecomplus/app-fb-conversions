@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/ecomplus/application-starter/compare/v1.2.0...v2.0.0) (2023-01-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* **send-cart-event:** new procedure trigger and new auth scope (read customers) required
+
+### Features
+
+* **send-cart-event:** handle webhooks for new cart trigger ([#45](https://github.com/ecomplus/application-starter/issues/45)) ([7cf5ec1](https://github.com/ecomplus/application-starter/commit/7cf5ec1f35d73f5233faf16f10462abcf477cc0c))
+
+
+### Bug Fixes
+
+* **deps:** bump `firebase-tools` to v11 ([f9fef85](https://github.com/ecomplus/application-starter/commit/f9fef855d160e789dc08af5ebfa7585a695c3b94))
+* **deps:** update dependency firebase-tools to ^11.19.0 ([1a0a6e9](https://github.com/ecomplus/application-starter/commit/1a0a6e9042722c0a866f2abe1d0c86535a43a65c))
+* **webhook:** return (ends function) on async fb event request execution ([6273ad7](https://github.com/ecomplus/application-starter/commit/6273ad788a214de7fcaa5d5a12e842f035111e6e))
+
 ## [1.2.0](https://github.com/ecomplus/application-starter/compare/v1.1.2...v1.2.0) (2022-12-16)
 
 
