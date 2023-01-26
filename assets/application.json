@@ -16,7 +16,9 @@
     "products": [],
     "brands": [],
     "categories": [],
-    "customers": [],
+    "customers": [
+      "GET"
+    ],
     "orders": [
       "GET"
     ],
