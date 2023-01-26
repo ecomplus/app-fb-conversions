@@ -1,5 +1,11 @@
 const { logger } = require('firebase-functions')
 const fbBizSdk = require('facebook-nodejs-business-sdk')
+const {
+  createContent,
+  createCustonData,
+  createServeEvent,
+  createUserData
+} = require('../../lib/fb-api/create-objects')
 
 // read configured E-Com Plus app data
 const getAppData = require('./../../lib/store-api/get-app-data')
@@ -9,7 +15,7 @@ const ECHO_SUCCESS = 'SUCCESS'
 const ECHO_SKIP = 'SKIP'
 const ECHO_API_ERROR = 'STORE_API_ERR'
 
-exports.post = ({ appSdk }, req, res) => {
+exports.post = async ({ appSdk }, req, res) => {
   // receiving notification from Store API
   const { storeId } = req
 
@@ -19,99 +25,77 @@ exports.post = ({ appSdk }, req, res) => {
    */
   const trigger = req.body
 
-  if (trigger.resource === 'orders' && trigger.action === 'create') {
-    const orderId = trigger.inserted_id
-    let order = trigger.body
-    if (order.status === 'cancelled') {
-      res.sendStatus(204)
-      return
-    }
-    const buyer = order.buyers && order.buyers[0]
-    const clientIp = order.browser_ip
-    if (orderId && buyer && clientIp) {
+  try {
+    const appData = await getAppData({ appSdk, storeId })
+
+    if (appData) {
       // get app configured options
-      return getAppData({ appSdk, storeId })
 
-        .then(async appData => {
-          if (
-            Array.isArray(appData.ignore_triggers) &&
-            appData.ignore_triggers.indexOf(trigger.resource) > -1
-          ) {
-            // ignore current trigger
-            const err = new Error()
-            err.name = SKIP_TRIGGER_NAME
-            throw err
-          }
+      if (
+        Array.isArray(appData.ignore_triggers) &&
+        appData.ignore_triggers.indexOf(trigger.resource) > -1
+      ) {
+        // ignore current trigger
+        const err = new Error()
+        err.name = SKIP_TRIGGER_NAME
+        throw err
+      }
 
-          /* DO YOUR CUSTOM STUFF HERE */
+      const fbPixelId = appData.fb_pixel_id
+      const fbGraphToken = appData.fb_graph_token
 
-          let clientUserAgent, eventID
-          const tryFetchOrder = async (isRetry = false) => {
-            try {
-              const { response } = await appSdk.apiRequest(storeId, `orders/${orderId}.json`)
-              order = response.data
-              if (order.metafields && order.status !== 'cancelled') {
-                const metafield = order.metafields.find(({ namespace, field }) => {
-                  return namespace === 'fb' && field === 'pixel'
-                })
-                if (metafield) {
-                  const value = JSON.parse(metafield.value)
-                  eventID = value.eventID
-                  clientUserAgent = value.userAgent
-                } else if (!isRetry) {
-                  await new Promise((resolve) => {
-                    setTimeout(() => {
-                      logger.log('Retry fetch order')
-                      tryFetchOrder(true).then(resolve)
-                    }, 20000)
-                  })
-                }
-              }
-            } catch (err) {
-              logger.error(err)
-            }
-            return true
-          }
-          await tryFetchOrder()
+      if (fbPixelId && fbGraphToken) {
+        const EventRequest = fbBizSdk.EventRequest
+        fbBizSdk.FacebookAdsApi.init(fbGraphToken)
+
+        if (trigger.resource === 'orders' && trigger.action === 'create') {
+          const orderId = trigger.inserted_id
+          let order = trigger.body
           if (order.status === 'cancelled') {
             res.sendStatus(204)
             return
           }
+          const buyer = order.buyers && order.buyers[0]
+          const clientIp = order.browser_ip
+          if (orderId && buyer && clientIp) {
+            /* DO YOUR CUSTOM STUFF HERE */
 
-          // https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api#send
-          const fbPixelId = appData.fb_pixel_id
-          const fbGraphToken = appData.fb_graph_token
-          if (fbPixelId && fbGraphToken) {
-            const Content = fbBizSdk.Content
-            const CustomData = fbBizSdk.CustomData
-            const DeliveryCategory = fbBizSdk.DeliveryCategory
-            const EventRequest = fbBizSdk.EventRequest
-            const UserData = fbBizSdk.UserData
-            const ServerEvent = fbBizSdk.ServerEvent
-            fbBizSdk.FacebookAdsApi.init(fbGraphToken)
-
-            const userData = new UserData()
-            userData.setExternalId(buyer._id)
-            const emails = buyer.emails || []
-            if (buyer.main_email) {
-              emails.push(buyer.main_email)
-            }
-            if (emails.length) {
-              userData.setEmails(emails)
-            }
-            if (buyer.phones && buyer.phones.length) {
-              userData.setPhones(buyer.phones.map(({ number }) => String(number)))
-            }
-            if (buyer.name && buyer.name.given_name) {
-              userData.setFirstName(buyer.name.given_name)
-              if (buyer.name.family_name) {
-                userData.setLastName(buyer.name.family_name)
+            let clientUserAgent, eventID
+            const tryFetchOrder = async (isRetry = false) => {
+              try {
+                const { response } = await appSdk.apiRequest(storeId, `orders/${orderId}.json`)
+                order = response.data
+                if (order.metafields && order.status !== 'cancelled') {
+                  const metafield = order.metafields.find(({ namespace, field }) => {
+                    return namespace === 'fb' && field === 'pixel'
+                  })
+                  if (metafield) {
+                    const value = JSON.parse(metafield.value)
+                    eventID = value.eventID
+                    clientUserAgent = value.userAgent
+                  } else if (!isRetry) {
+                    await new Promise((resolve) => {
+                      setTimeout(() => {
+                        logger.log('Retry fetch order')
+                        tryFetchOrder(true).then(resolve)
+                      }, 20000)
+                    })
+                  }
+                }
+              } catch (err) {
+                logger.error(err)
               }
+              return true
             }
-            if (buyer.gender === 'f' || buyer.gender === 'm') {
-              userData.setGender(buyer.gender)
+            await tryFetchOrder()
+            if (order.status === 'cancelled') {
+              res.sendStatus(204)
+              return
             }
-            userData.setClientIpAddress(clientIp)
+
+            // https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api#send
+            const userData = createUserData(buyer, clientIp)
+
             if (clientUserAgent) {
               userData.setClientUserAgent(clientUserAgent)
             }
@@ -129,37 +113,30 @@ exports.post = ({ appSdk }, req, res) => {
             if (items && items.length) {
               items.forEach(item => {
                 if (item.quantity > 0) {
-                  const content = (new Content())
-                    .setId(item.sku || item.product_id)
-                    .setQuantity(item.quantity)
-                    .setDeliveryCategory(DeliveryCategory.HOME_DELIVERY)
-                  if (item.name) {
-                    content.setTitle(item.name)
-                  }
+                  const content = createContent(item)
                   contents.push(content)
                 }
               })
             }
-            const customData = (new CustomData())
-              .setContents(contents)
-              .setCurrency((order.currency_id && order.currency_id.toLowerCase()) || 'brl')
-              .setValue(Math.round(order.amount.total * 100) / 100)
+            const customData = createCustonData(contents, order.amount.total, order.currency_id)
 
             const eventMs = Math.min(new Date(order.created_at || trigger.datetime).getTime(), Date.now() - 3000)
             console.log(`#${storeId} ${orderId} (${eventID}) at ${eventMs}ms`)
 
-            const serverEvent = (new ServerEvent())
-              .setEventName('Purchase')
-              .setEventTime(Math.round(eventMs / 1000))
-              .setUserData(userData)
-              .setCustomData(customData)
-              .setActionSource('website')
+            let eventSourceUrl
             if (order.checkout_link) {
-              serverEvent.setEventSourceUrl(order.checkout_link)
+              eventSourceUrl = order.checkout_link
             } else if (order.domain) {
-              serverEvent.setEventSourceUrl(`https://${order.domain}`)
+              eventSourceUrl = `https://${order.domain}`
             }
-            serverEvent.setEventId(eventID || orderId)
+            const serverEvent = createServeEvent(
+              'Purchase',
+              eventMs,
+              userData,
+              customData,
+              eventID || orderId,
+              eventSourceUrl
+            )
 
             const eventsData = [serverEvent]
             const eventRequest = (new EventRequest(fbGraphToken, fbPixelId))
@@ -167,6 +144,7 @@ exports.post = ({ appSdk }, req, res) => {
 
             eventRequest.execute().then(
               response => {
+                // console.log('>> ', response)
                 logger.info(response)
                 // all done
                 res.status(201).send(ECHO_SUCCESS)
@@ -177,32 +155,121 @@ exports.post = ({ appSdk }, req, res) => {
               }
             )
           }
-        })
+        } else if (trigger.resource === 'carts' && trigger.action === 'create') {
+          // https://developers.facebook.com/docs/meta-pixel/reference#standard-events
 
-        .catch(err => {
-          if (err.name === SKIP_TRIGGER_NAME) {
-            // trigger ignored by app configuration
-            res.send(ECHO_SKIP)
-          } else if (err.appWithoutAuth === true) {
-            const msg = `Webhook for ${storeId} unhandled with no authentication found`
-            const error = new Error(msg)
-            error.trigger = JSON.stringify(trigger)
-            console.error(error)
-            res.status(412).send(msg)
-          } else {
-            // console.error(err)
-            // request to Store API with error response
-            // return error status code
-            res.status(500)
-            const { message } = err
-            res.send({
-              error: ECHO_API_ERROR,
-              message
+          // Event name: InitiateCheckout
+          // custom_event_type: INITIATE_CHECKOUT
+          // Properties
+          // content_category, content_ids, contents, currency, num_items and value
+
+          // console.log('>>> ', trigger, ' <<<')
+
+          const cartId = trigger.inserted_id
+          const cart = trigger.body
+
+          if (cart.completed) {
+            res.sendStatus(204)
+            return
+          }
+
+          const eventMs = Math.min(new Date(cart.created_at || trigger.datetime).getTime(), Date.now() - 3000)
+          console.log(`#${storeId} ${cartId} at ${eventMs}ms`)
+
+          const tryFetchCustomer = async (customerId) => {
+            const { response } = await appSdk.apiRequest(storeId, `customers/${customerId}.json`)
+            return response.data
+          }
+
+          let customer
+          if (cart.customers && cart.customers.length > 0) {
+            customer = await tryFetchCustomer(cart.customers[0])
+          }
+
+          let userData
+          let address
+          if (customer) {
+            userData = createUserData(customer)
+            if (customer.addresses && customer.addresses.length > 0) {
+              address = customer.addresses[0]
+            }
+          }
+
+          if (address && address.zip) {
+            userData.setZip(address.zip.replace(/\D/g, ''))
+            if (address.province_code) {
+              userData.setState(address.province_code.toLowerCase())
+              userData.setCountry((address.country_code || 'BR').toLowerCase())
+            }
+          }
+
+          const contents = []
+          const { items } = cart
+          if (items && items.length) {
+            items.forEach(item => {
+              if (item.quantity > 0) {
+                const content = createContent(item)
+                contents.push(content)
+              }
             })
           }
-        })
+          const customData = createCustonData(contents, cart.subtotal)
+
+          let eventSourceUrl
+          if (cart.permalink) {
+            eventSourceUrl = cart.permalink
+          }
+          const serverEvent = createServeEvent(
+            'InitiateCheckout',
+            eventMs,
+            userData,
+            customData,
+            cartId,
+            eventSourceUrl
+          )
+
+          const eventsData = [serverEvent]
+          const eventRequest = (new EventRequest(fbGraphToken, fbPixelId))
+            .setEvents(eventsData)
+
+          eventRequest.execute().then(
+            response => {
+              // console.log('>> ', response)
+              logger.info(response)
+              // all done
+              res.status(201).send(ECHO_SUCCESS)
+            },
+            err => {
+              console.error(`Facebook event request error: ${err.message}`, err, JSON.stringify(trigger))
+              res.sendStatus(202)
+            }
+          )
+        }
+      }
+      res.sendStatus(412)
+    } else {
+      res.sendStatus(401)
+    }
+  } catch (err) {
+    if (err.name === SKIP_TRIGGER_NAME) {
+      // trigger ignored by app configuration
+      res.send(ECHO_SKIP)
+    } else if (err.appWithoutAuth === true) {
+      const msg = `Webhook for ${storeId} unhandled with no authentication found`
+      const error = new Error(msg)
+      error.trigger = JSON.stringify(trigger)
+      console.error(error)
+      res.status(412).send(msg)
+    } else {
+      console.error(err)
+      // request to Store API with error response
+      // return error status code
+      res.status(500)
+      const { message } = err
+      res.send({
+        error: ECHO_API_ERROR,
+        message
+      })
     }
   }
-
-  res.sendStatus(412)
 }
