@@ -165,8 +165,8 @@ exports.post = async ({ appSdk }, req, res) => {
 
           // console.log('>>> ', trigger, ' <<<')
 
-          const cartId = trigger.inserted_id || trigger.resource_id
-          let cart = trigger.body
+          const cartId = trigger.inserted_id
+          const cart = trigger.body
 
           if (cart.completed) {
             res.sendStatus(204)
@@ -176,17 +176,10 @@ exports.post = async ({ appSdk }, req, res) => {
           const eventMs = Math.min(new Date(cart.created_at || trigger.datetime).getTime(), Date.now() - 3000)
           console.log(`#${storeId} ${cartId} at ${eventMs}ms`)
 
-          const tryFetchCart = async () => {
-            const { response } = await appSdk.apiRequest(storeId, `carts/${cartId}.json`)
-            cart = response.data
-          }
-
           const tryFetchCustomer = async (customerId) => {
             const { response } = await appSdk.apiRequest(storeId, `customers/${customerId}.json`)
             return response.data
           }
-
-          await tryFetchCart()
 
           let customer
           if (cart.customers && cart.customers.length > 0) {
