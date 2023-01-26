@@ -142,7 +142,7 @@ exports.post = async ({ appSdk }, req, res) => {
             const eventRequest = (new EventRequest(fbGraphToken, fbPixelId))
               .setEvents(eventsData)
 
-            eventRequest.execute().then(
+            return eventRequest.execute().then(
               response => {
                 // console.log('>> ', response)
                 logger.info(response)
@@ -232,7 +232,7 @@ exports.post = async ({ appSdk }, req, res) => {
           const eventRequest = (new EventRequest(fbGraphToken, fbPixelId))
             .setEvents(eventsData)
 
-          eventRequest.execute().then(
+          return eventRequest.execute().then(
             response => {
               // console.log('>> ', response)
               logger.info(response)
