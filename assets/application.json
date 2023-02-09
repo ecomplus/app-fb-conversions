@@ -52,5 +52,5 @@
     }
   },
   "auth_callback_uri": "https://us-central1-ecom-fb-conversions.cloudfunctions.net/app/ecom/auth-callback",
-  "version": "2.0.0"
+  "version": "3.0.0"
 }
