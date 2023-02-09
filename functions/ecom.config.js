@@ -185,9 +185,10 @@ procedures.push({
       action: 'create',
     },
 
+    // Receive notifications when cart is created with customer:
     {
       resource: 'carts',
-      action: 'create',
+      field: 'customers',
     },
 
     /* Receive notifications when order financial/fulfillment status changes:
