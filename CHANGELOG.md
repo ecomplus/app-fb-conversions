@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/ecomplus/application-starter/compare/v2.0.0...v3.0.0) (2023-02-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* editing app procedure triggers, must reinstall
+
+### Bug Fixes
+
+* **deps:** update dependency firebase-tools to ^11.22.0 ([7bcbc0b](https://github.com/ecomplus/application-starter/commit/7bcbc0b9ff719436a680a8facc9ba7a34ea6e9b7))
+
+
+* receive cart webhooks on customer set only ([976f38f](https://github.com/ecomplus/application-starter/commit/976f38f66618ac89dd42398829e31a88f474e1e6))
+
 ## [2.0.0](https://github.com/ecomplus/application-starter/compare/v1.2.0...v2.0.0) (2023-01-26)
 
 
