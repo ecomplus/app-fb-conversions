@@ -121,7 +121,7 @@ exports.post = async ({ appSdk }, req, res) => {
             const customData = createCustonData(contents, order.amount.total, order.currency_id)
 
             const eventMs = Math.min(new Date(order.created_at || trigger.datetime).getTime(), Date.now() - 3000)
-            console.log(`#${storeId} ${orderId} (${eventID}) at ${eventMs}ms`)
+            console.log(`#${storeId} order ${orderId} (${eventID}) at ${eventMs}ms`)
 
             let eventSourceUrl
             if (order.checkout_link) {
@@ -174,7 +174,7 @@ exports.post = async ({ appSdk }, req, res) => {
           }
 
           const eventMs = Math.min(new Date(cart.created_at || trigger.datetime).getTime(), Date.now() - 3000)
-          console.log(`#${storeId} ${cartId} at ${eventMs}ms`)
+          console.log(`#${storeId} cart ${cartId} at ${eventMs}ms`)
 
           const tryFetchCustomer = async (customerId) => {
             const { response } = await appSdk.apiRequest(storeId, `customers/${customerId}.json`)
