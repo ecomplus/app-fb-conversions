@@ -73,6 +73,8 @@ exports.post = async ({ appSdk }, req, res) => {
                     const value = JSON.parse(metafield.value)
                     eventID = value.eventID
                     clientUserAgent = value.userAgent
+                  } else if (order.client_user_agent) {
+                    clientUserAgent = order.client_user_agent
                   } else if (!isRetry) {
                     await new Promise((resolve) => {
                       setTimeout(() => {
