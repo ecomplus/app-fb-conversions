@@ -42,7 +42,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.8.1",
     "@commitlint/config-conventional": "^17.8.1",
-    "husky": "^7.0.4",
+    "husky": "^8.0.3",
     "standard": "^17.1.0",
     "standard-version": "^9.3.2"
   }
