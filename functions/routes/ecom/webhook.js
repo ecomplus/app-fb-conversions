@@ -157,7 +157,7 @@ exports.post = async ({ appSdk }, req, res) => {
               }
             )
           }
-        } else if (trigger.resource === 'carts' && trigger.action === 'create') {
+        } else if (trigger.resource === 'carts' && trigger.action === 'create' && !appData.fb_disable_cart) {
           // https://developers.facebook.com/docs/meta-pixel/reference#standard-events
 
           // Event name: InitiateCheckout

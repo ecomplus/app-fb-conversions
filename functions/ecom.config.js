@@ -159,6 +159,14 @@ const app = {
       },
       hide: true
     },
+    fb_disable_cart: {
+      schema: {
+        type: 'boolean',
+        default: false,
+        title: 'Desabilitar envio de carrinho'
+      },
+      hide: true
+    },
   }
 }
 
