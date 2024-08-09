@@ -41,8 +41,8 @@ exports.post = async ({ appSdk }, req, res) => {
         throw err
       }
 
-      const fbPixelId = appData.fb_pixel_id
-      const fbGraphToken = appData.fb_graph_token
+      let fbPixelId = appData.fb_pixel_id
+      let fbGraphToken = appData.fb_graph_token
 
       if (fbPixelId && fbGraphToken) {
         const EventRequest = fbBizSdk.EventRequest
@@ -55,6 +55,17 @@ exports.post = async ({ appSdk }, req, res) => {
             res.sendStatus(204)
             return
           }
+          const { domain } = order
+          if (domain) {
+            const domainSpecificPixel = appData.pixels_by_domain?.find((pixelByDomain) => {
+              return pixelByDomain.domain === domain
+            })
+            if (domainSpecificPixel?.fb_pixel_id && domainSpecificPixel.fb_graph_token) {
+              fbPixelId = domainSpecificPixel.fb_pixel_id
+              fbGraphToken = domainSpecificPixel.fb_graph_token
+            }
+          }
+
           const buyer = order.buyers && order.buyers[0]
           const clientIp = order.browser_ip
           if (orderId && buyer && clientIp) {
@@ -128,8 +139,8 @@ exports.post = async ({ appSdk }, req, res) => {
             let eventSourceUrl
             if (order.checkout_link) {
               eventSourceUrl = order.checkout_link
-            } else if (order.domain) {
-              eventSourceUrl = `https://${order.domain}`
+            } else if (domain) {
+              eventSourceUrl = `https://${domain}`
             }
             const serverEvent = createServeEvent(
               'Purchase',

@@ -167,6 +167,38 @@ const app = {
       },
       hide: true
     },
+    pixels_by_domain: {
+      schema: {
+        title: 'Pixels por domínio',
+        description: 'Credenciais opcionais para Pixels diferentes em vários domínios',
+        type: 'array',
+        maxItems: 100,
+        items: {
+          title: 'Regra de envio',
+          type: 'object',
+          required: ['domain', 'fb_pixel_id', 'fb_graph_token'],
+          properties: {
+            domain: {
+              type: 'string',
+              maxLength: 100,
+              title: 'Domínio da loja'
+            },
+            fb_pixel_id: {
+              type: 'string',
+              maxLength: 100,
+              title: 'Pixel ID',
+              description: 'ID do pixel do Facebook'
+            },
+            fb_graph_token: {
+              type: 'string',
+              maxLength: 500,
+              title: 'Meta App token'
+            },
+          }
+        }
+      },
+      hide: true
+    }
   }
 }
 
