@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/ecomplus/application-starter/compare/v3.0.0...v3.1.0) (2024-08-09)
+
+
+### Features
+
+* option to disable cart sending ([7cec6bf](https://github.com/ecomplus/application-starter/commit/7cec6bfa57b99061744a2e75dd4f41b882349b08))
+* supporting multiple pixel credentials per domain on app config ([2388bb4](https://github.com/ecomplus/application-starter/commit/2388bb420106fb2d82ab9cf80af83722a0496772))
+
+
+### Bug Fixes
+
+* **deps:** update all non-major ([d06cac3](https://github.com/ecomplus/application-starter/commit/d06cac37016c7024dc47b794749bfacd119725fe))
+* **deps:** update dependency dotenv to ^16.4.1 ([8132f24](https://github.com/ecomplus/application-starter/commit/8132f24bff44cd272f04e0861ce27c60bb058b17))
+
 ## [3.0.0](https://github.com/ecomplus/application-starter/compare/v2.0.0...v3.0.0) (2023-02-09)
 
 
