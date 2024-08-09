@@ -43,10 +43,8 @@ exports.post = async ({ appSdk }, req, res) => {
 
       let fbPixelId = appData.fb_pixel_id
       let fbGraphToken = appData.fb_graph_token
-
       if (fbPixelId && fbGraphToken) {
         const EventRequest = fbBizSdk.EventRequest
-        fbBizSdk.FacebookAdsApi.init(fbGraphToken)
 
         if (trigger.resource === 'orders' && trigger.action === 'create') {
           const orderId = trigger.inserted_id
@@ -65,6 +63,7 @@ exports.post = async ({ appSdk }, req, res) => {
               fbGraphToken = domainSpecificPixel.fb_graph_token
             }
           }
+          fbBizSdk.FacebookAdsApi.init(fbGraphToken)
 
           const buyer = order.buyers && order.buyers[0]
           const clientIp = order.browser_ip
@@ -169,6 +168,7 @@ exports.post = async ({ appSdk }, req, res) => {
             )
           }
         } else if (trigger.resource === 'carts' && trigger.action === 'create' && !appData.fb_disable_cart) {
+          fbBizSdk.FacebookAdsApi.init(fbGraphToken)
           // https://developers.facebook.com/docs/meta-pixel/reference#standard-events
 
           // Event name: InitiateCheckout
